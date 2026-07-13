@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chá de Casa Nova</title>
+    <meta name="description" content="Lista de presentes para o chá de casa nova" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="loader" id="loader" aria-hidden="true">
+      <div class="spinner"></div>
+    </div>
+
+    <div class="modal-overlay hidden" id="nameModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-card">
+        <h2 id="modalTitle">Olá! Antes de visualizar nossa lista de presentes, informe seu nome.</h2>
+        <form id="nameForm" class="modal-form">
+          <label class="sr-only" for="visitorName">Nome</label>
+          <input id="visitorName" name="visitorName" type="text" placeholder="Seu nome" required />
+          <button type="submit">Continuar</button>
+        </form>
+      </div>
+    </div>
+
+    <header class="hero">
+      <nav class="topbar">
+        <a class="brand" href="index.html">Chá de Casa Nova</a>
+        <div class="topbar-actions">
+          <button class="theme-toggle" id="themeToggle" type="button" aria-label="Alternar tema">☀️</button>
+          <a class="admin-link" href="admin.html">Painel Admin</a>
+        </div>
+      </nav>
+
+      <div class="hero-content">
+        <div class="hero-copy">
+          <p class="eyebrow">Lista de presentes</p>
+          <h1>Chá de Casa Nova</h1>
+          <p>
+            Ficamos muito felizes com sua presença neste momento tão especial. Caso queira nos presentear,
+            escolhemos alguns itens que irão nos ajudar a montar nosso novo lar.
+          </p>
+          <a class="cta" href="#presentes">Ver presentes</a>
+        </div>
+        <img src="img/hero-casa.svg" alt="Ilustração de uma casa acolhedora" />
+      </div>
+    </header>
+
+    <main>
+      <section class="controls" id="presentes">
+        <div class="search-box">
+          <input id="searchInput" type="text" placeholder="Buscar presente" />
+        </div>
+        <div class="filter-box">
+          <select id="categoryFilter">
+            <option value="todos">Todas as categorias</option>
+            <option value="Cozinha">Cozinha</option>
+            <option value="Quarto">Quarto</option>
+            <option value="Sala">Sala</option>
+            <option value="Banheiro">Banheiro</option>
+            <option value="Decor">Decor</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="stats">
+        <article class="stat-card">
+          <strong id="availableCount">0</strong>
+          <span>presentes disponíveis</span>
+        </article>
+        <article class="stat-card">
+          <strong id="reservedCount">0</strong>
+          <span>presentes reservados</span>
+        </article>
+      </section>
+
+      <section class="gift-section">
+        <div class="section-title">
+          <h2>Presentes disponíveis</h2>
+          <p>Escolha um item que combine com seu gosto e nos ajude a montar o lar.</p>
+        </div>
+        <div id="giftGrid" class="gift-grid"></div>
+      </section>
+
+      <section class="gift-section reserved-section">
+        <div class="section-title">
+          <h2>Presentes reservados</h2>
+          <p>Itens que já foram escolhidos por outros convidados.</p>
+        </div>
+        <div id="reservedGrid" class="gift-grid reserved-grid"></div>
+      </section>
+    </main>
+
+    <button class="scroll-top" id="scrollTop" type="button" aria-label="Voltar ao topo">↑</button>
+
+    <footer class="footer">
+      <p>Feito com carinho para o nosso novo lar.</p>
+    </footer>
+
+    <div class="toast" id="toast" aria-live="polite"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

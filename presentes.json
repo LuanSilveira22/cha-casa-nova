@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "nome": "Jogo de Panelas Tramontina",
+    "descricao": "Conjunto com 5 peças em inox para a cozinha.",
+    "categoria": "Cozinha",
+    "valor": "R$ 320,00",
+    "imagem": "img/panelas.svg",
+    "link": "https://www.amazon.com.br/",
+    "comprado": false
+  },
+  {
+    "id": 2,
+    "nome": "Jogo de Lençóis Premium",
+    "descricao": "Sete peças em algodão com acabamento elegante.",
+    "categoria": "Quarto",
+    "valor": "R$ 220,00",
+    "imagem": "img/lencois.svg",
+    "link": "https://www.mercadolivre.com.br/",
+    "comprado": false
+  },
+  {
+    "id": 3,
+    "nome": "Conjunto de Copos",
+    "descricao": "Copo de vidro com design moderno para servir bebidas.",
+    "categoria": "Sala",
+    "valor": "R$ 110,00",
+    "imagem": "img/copos.svg",
+    "link": "https://www.magazineluiza.com.br/",
+    "comprado": false
+  },
+  {
+    "id": 4,
+    "nome": "Kit de Toalhas de Banho",
+    "descricao": "Conjunto em algodão macio para a casa toda.",
+    "categoria": "Banheiro",
+    "valor": "R$ 140,00",
+    "imagem": "img/toalhas.svg",
+    "link": "https://www.amazon.com.br/",
+    "comprado": false
+  },
+  {
+    "id": 5,
+    "nome": "Vaso Decorativo",
+    "descricao": "Peça charmosa para dar acolhimento ao ambiente.",
+    "categoria": "Decor",
+    "valor": "R$ 95,00",
+    "imagem": "img/vaso.svg",
+    "link": "https://www.mercadolivre.com.br/",
+    "comprado": false
+  },
+  {
+    "id": 6,
+    "nome": "Luminária de Mesa",
+    "descricao": "Luminária com iluminação suave para o ambiente.",
+    "categoria": "Decor",
+    "valor": "R$ 180,00",
+    "imagem": "img/luminaria.svg",
+    "link": "https://www.magazineluiza.com.br/",
+    "comprado": false
+  }
+]

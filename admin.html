@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Painel Administrativo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body data-page="admin">
+    <div class="loader" id="loader" aria-hidden="true">
+      <div class="spinner"></div>
+    </div>
+
+    <header class="hero compact-hero">
+      <nav class="topbar">
+        <a class="brand" href="index.html">Chá de Casa Nova</a>
+        <div class="topbar-actions">
+          <button class="theme-toggle" id="themeToggle" type="button" aria-label="Alternar tema">☀️</button>
+          <a class="admin-link" href="index.html">Voltar ao site</a>
+        </div>
+      </nav>
+      <div class="hero-content compact-content">
+        <div class="hero-copy">
+          <p class="eyebrow">Painel administrativo</p>
+          <h1>Gerencie a lista de presentes</h1>
+          <p>Adicione, edite e reserve itens com facilidade.</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="admin-layout">
+      <section class="card">
+        <h2>Adicionar ou editar presente</h2>
+        <form id="giftForm" class="admin-form">
+          <input type="hidden" id="giftId" />
+          <label>
+            Nome
+            <input id="giftName" name="nome" type="text" required />
+          </label>
+          <label>
+            Descrição
+            <textarea id="giftDescription" name="descricao" rows="3" required></textarea>
+          </label>
+          <label>
+            Categoria
+            <input id="giftCategory" name="categoria" type="text" placeholder="Cozinha" required />
+          </label>
+          <label>
+            Valor
+            <input id="giftValue" name="valor" type="text" placeholder="R$ 150,00" />
+          </label>
+          <label>
+            Imagem
+            <input id="giftImage" name="imagem" type="text" placeholder="img/panelas.svg" required />
+          </label>
+          <label>
+            Link de compra
+            <input id="giftLink" name="link" type="url" placeholder="https://" required />
+          </label>
+          <div class="form-actions">
+            <button type="submit">Salvar presente</button>
+            <button type="button" id="cancelEdit" class="secondary">Cancelar</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Presentes cadastrados</h2>
+        <div id="adminList" class="admin-list"></div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" aria-live="polite"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
