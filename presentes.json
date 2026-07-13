@@ -1,4 +1,4 @@
-[
+  [
   {
     "id": 1,
     "nome": "Jogo de Panelas Tramontina",
@@ -58,5 +58,18 @@
     "imagem": "img/luminaria.svg",
     "link": "https://www.magazineluiza.com.br/",
     "comprado": false
-  }
+
+
+},
+  {
+    "id": 7,
+    "nome": "ABC",
+    "descricao": "ABC.",
+    "categoria": "Decor",
+    "valor": "R$ 180,00",
+    "imagem": "img/luminaria.svg",
+    "link": "google.com.br",
+    "comprado": false
+}
+
 ]
