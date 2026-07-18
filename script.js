@@ -6,6 +6,7 @@ const STORAGE_KEYS = {
   theme: 'cha-casa-nova-theme'
 };
 
+const PURCHASE_REDIRECT_KEY = 'cha-casa-nova-post-redirect';
 const TELEGRAM_BOT_TOKEN = '8926548827:AAFE2f-deqgs2PslCZ-Z7NUgK2VQUkWLDqk';
 const TELEGRAM_CHAT_ID = '957453226';
 
@@ -33,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Página inicial.
 async function initHomePage() {
   showLoader();
+  setupPostRedirectListener();
 
   try {
     await loadGifts();
@@ -168,17 +170,99 @@ function createReservedCard(item) {
 }
 
 async function initiatePurchase(item) {
-  // Abre o link primeiro
-  window.open(item.link, '_blank', 'noopener');
+  openAskPurchaseModal(item);
+}
 
-  // Aguarda um pouco e depois exibe o pop-up de confirmação
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
-  const confirmed = window.confirm('Você confirma que irá comprar este presente?');
-  if (!confirmed) {
+function openAskPurchaseModal(item) {
+  const modal = document.getElementById('askPurchaseModal');
+  const giftNameDisplay = document.getElementById('giftNameDisplay');
+  const confirmBtn = document.getElementById('confirmAskBtn');
+  const cancelBtn = document.getElementById('cancelAskBtn');
+
+  if (!modal) {
     return;
   }
 
+  // Exibir nome do presente
+  if (giftNameDisplay) {
+    giftNameDisplay.innerHTML = `<strong>${item.nome}</strong>`;
+  }
+
+  // Mostrar modal
+  modal.classList.remove('hidden');
+
+  // Função para confirmar
+  const handleConfirm = () => {
+    modal.classList.add('hidden');
+    confirmBtn.removeEventListener('click', handleConfirm);
+    cancelBtn.removeEventListener('click', handleCancel);
+    openConfirmPurchaseModal(item);
+  };
+
+  // Função para cancelar
+  const handleCancel = () => {
+    modal.classList.add('hidden');
+    confirmBtn.removeEventListener('click', handleConfirm);
+    cancelBtn.removeEventListener('click', handleCancel);
+  };
+
+  // Adicionar event listeners
+  confirmBtn.addEventListener('click', handleConfirm);
+  cancelBtn.addEventListener('click', handleCancel);
+}
+
+function openConfirmPurchaseModal(item) {
+  const modal = document.getElementById('confirmPurchaseModal');
+  if (!modal) {
+    return;
+  }
+
+  let countdownTime = 10;
+  const timerElement = document.getElementById('timerCount');
+  const confirmBtn = document.getElementById('confirmPurchaseBtn');
+  const cancelBtn = document.getElementById('cancelPurchaseBtn');
+
+  // Mostrar modal
+  modal.classList.remove('hidden');
+
+  // Função para confirmar compra
+  const handleConfirm = async () => {
+    clearInterval(countdownInterval);
+    await completeGiftPurchase(item);
+    modal.classList.add('hidden');
+    timerElement.textContent = '10';
+    confirmBtn.removeEventListener('click', handleConfirm);
+    cancelBtn.removeEventListener('click', handleCancel);
+  };
+
+  // Função para cancelar
+  const handleCancel = () => {
+    clearInterval(countdownInterval);
+    modal.classList.add('hidden');
+    timerElement.textContent = '10';
+    confirmBtn.removeEventListener('click', handleConfirm);
+    cancelBtn.removeEventListener('click', handleCancel);
+  };
+
+  // Configurar countdown
+  const countdownInterval = setInterval(() => {
+    countdownTime--;
+    if (timerElement) {
+      timerElement.textContent = countdownTime;
+    }
+
+    if (countdownTime <= 0) {
+      clearInterval(countdownInterval);
+      handleConfirm();
+    }
+  }, 1000);
+
+  // Adicionar event listeners
+  confirmBtn.addEventListener('click', handleConfirm);
+  cancelBtn.addEventListener('click', handleCancel);
+}
+
+async function completeGiftPurchase(item) {
   try {
     await sendTelegramNotification(item);
 
@@ -186,6 +270,21 @@ async function initiatePurchase(item) {
     appState.reservedIds.add(item.id);
     persistGifts();
     renderHome();
+
+    // Sempre salva a informação de redirecionamento
+    try {
+      localStorage.setItem(PURCHASE_REDIRECT_KEY, JSON.stringify({ id: item.id, nome: item.nome }));
+    } catch (e) {
+      // ignore storage errors
+    }
+
+    // Se tem link, redireciona (mensagem aparecerá ao retornar)
+    if (item.link) {
+      window.open(item.link, '_blank', 'noopener,noreferrer');
+      return;
+    }
+
+    // Se não tem link, mostra toast de confirmação (para presentes sem link)
     showToast('Presente reservado com sucesso!');
   } catch (error) {
     showToast(error.message || 'Houve um problema ao reservar o presente.');
@@ -218,6 +317,51 @@ async function sendTelegramNotification(item) {
 
 function getStoredVisitorName() {
   return localStorage.getItem(STORAGE_KEYS.visitorName)?.trim() || '';
+}
+
+function checkPostRedirectToast() {
+  try {
+    const raw = localStorage.getItem(PURCHASE_REDIRECT_KEY);
+    if (!raw) return;
+    const payload = JSON.parse(raw);
+    const nome = payload?.nome || '';
+    showToast(nome ? `Presente reservado com sucesso! Obrigado, ${nome}.` : 'Presente reservado com sucesso!');
+  } catch (e) {
+    showToast('Presente reservado com sucesso!');
+  } finally {
+    try { localStorage.removeItem(PURCHASE_REDIRECT_KEY); } catch (e) {}
+  }
+}
+
+function setupPostRedirectListener() {
+  try {
+    const raw = localStorage.getItem(PURCHASE_REDIRECT_KEY);
+    if (!raw) return;
+
+    const handler = () => {
+      if (document.visibilityState === 'visible') {
+        checkPostRedirectToast();
+        removeListeners();
+      }
+    };
+
+    const onFocus = () => {
+      checkPostRedirectToast();
+      removeListeners();
+    };
+
+    function removeListeners() {
+      document.removeEventListener('visibilitychange', handler);
+      window.removeEventListener('focus', onFocus);
+      window.removeEventListener('pageshow', onFocus);
+    }
+
+    document.addEventListener('visibilitychange', handler);
+    window.addEventListener('focus', onFocus);
+    window.addEventListener('pageshow', onFocus);
+  } catch (e) {
+    // ignore
+  }
 }
 
 function saveVisitorName(name) {
@@ -270,25 +414,43 @@ function showWelcome(name) {
   hero.insertBefore(welcome, hero.querySelector('.cta'));
 }
 
+function normalizeGift(item) {
+  return {
+    id: Number(item.id) || Date.now(),
+    nome: String(item.nome || '').trim(),
+    descricao: String(item.descricao || '').trim(),
+    categoria: String(item.categoria || '').trim(),
+    valor: String(item.valor || '').trim(),
+    imagem: String(item.imagem || '').trim(),
+    link: String(item.link || '').trim(),
+    reservado: Boolean(item.reservado),
+    comprado: Boolean(item.comprado)
+  };
+}
+
 function persistGifts() {
   localStorage.setItem(STORAGE_KEYS.gifts, JSON.stringify(appState.gifts));
   localStorage.setItem(STORAGE_KEYS.reserved, JSON.stringify([...appState.reservedIds]));
 }
 
 async function loadGifts() {
-  const storedItems = localStorage.getItem(STORAGE_KEYS.gifts);
-  if (storedItems) {
-    appState.gifts = JSON.parse(storedItems);
-    return;
-  }
+  const storedItems = JSON.parse(localStorage.getItem(STORAGE_KEYS.gifts) || '[]');
 
-  const response = await fetch('./presentes.json');
-  if (!response.ok) {
-    throw new Error('Não foi possível carregar os presentes.');
-  }
+  try {
+    const response = await fetch('./presentes.json', { cache: 'no-store' });
+    if (!response.ok) {
+      throw new Error('Não foi possível carregar os presentes.');
+    }
 
-  appState.gifts = await response.json();
-  localStorage.setItem(STORAGE_KEYS.gifts, JSON.stringify(appState.gifts));
+    appState.gifts = (await response.json()).map(normalizeGift);
+    localStorage.setItem(STORAGE_KEYS.gifts, JSON.stringify(appState.gifts));
+  } catch (error) {
+    if (storedItems.length) {
+      appState.gifts = storedItems.map(normalizeGift);
+    } else {
+      throw error;
+    }
+  }
 }
 
 function setupTheme() {

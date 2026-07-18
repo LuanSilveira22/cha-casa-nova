@@ -29,6 +29,33 @@
       </div>
     </div>
 
+    <div class="modal-overlay hidden" id="askPurchaseModal" role="dialog" aria-modal="true" aria-labelledby="askTitle">
+      <div class="modal-card">
+        <h2 id="askTitle">Confirmar compra</h2>
+        <p id="giftNameDisplay"></p>
+        <p>Você tem certeza que vai comprar este presente?</p>
+        <div class="modal-form">
+          <button type="button" id="confirmAskBtn" class="primary">Sim, comprar</button>
+          <button type="button" id="cancelAskBtn" class="secondary">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay hidden" id="confirmPurchaseModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+      <div class="modal-card">
+        <h2 id="confirmTitle">Você será redirecionado em breve</h2>
+        <p>Por favor, <strong>não esqueça de voltar ao nosso site</strong> para confirmar que você comprou este presente! Isso nos ajuda a atualizar nossa lista.</p>
+        <div class="purchase-timer">
+          <span id="timerCount">10</span>
+          <span>segundos</span>
+        </div>
+        <div class="modal-form">
+          <button type="button" id="confirmPurchaseBtn" class="primary">Entendi, ir ao site agora</button>
+          <button type="button" id="cancelPurchaseBtn" class="secondary">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
     <header class="hero">
       <nav class="topbar">
         <a class="brand" href="index.html">Chá de Casa Nova</a>

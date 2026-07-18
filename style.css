@@ -378,6 +378,21 @@ main {
   width: 100%;
 }
 
+.purchase-timer {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  margin: 20px 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.purchase-timer span:first-child {
+  font-family: 'Cormorant Garamond', serif;
+}
+
 .scroll-top {
   position: fixed;
   right: 20px;
